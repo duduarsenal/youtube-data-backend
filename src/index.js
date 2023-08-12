@@ -1,17 +1,23 @@
 const express = require('express')
 require('dotenv').config()
+const cors = require('cors');
+
 const app = express();
 const port = 3030;
 // const url = "http://localhost:3030"
 const api_key = process.env.API_KEY;
-const url_yt_videos = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=4&key=${api_key}`
 const url_yt_statistics = `https://www.googleapis.com/youtube/v3/channels?part=snippet%2C%20statistics&key=${api_key}`
+const url_yt_videos = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=4&key=${api_key}`
 
-app.use(express.json())
+app.use(express.json());
+app.use(cors({
+    // origin: '' // Permitir somente alguma URL
+    // methods: '' // Permitir somente algum(s) metodo(s)
+}));
 
-app.get('/api/statistics', async (req, res) => {
+app.get('/api/statistics/:id', async (req, res) => {
     try {
-        const urlResponse = await fetch(`${url_yt_statistics}&id=${req.body.id}`);
+        const urlResponse = await fetch(`${url_yt_statistics}&id=${req.params.id}`);
         const data = await urlResponse.json();
         
         const {title, customUrl, publishedAt, thumbnails} = data.items[0].snippet //ARRUMAR
@@ -22,17 +28,19 @@ app.get('/api/statistics', async (req, res) => {
 
         const dados = {...dadosCanal, ...countCanal}
 
+        // console.log(dados);
         res.send(dados)
     } catch (error) {
-        console.error(`Erro: ${error}`)
+        console.error(`Erro estatisticas: ${error}`)
     }
 })
 
-app.get('/api/videos', async (req, res) => {
+app.get('/api/videos/:id', async (req, res) => {
     try {
-        const urlResponse = await fetch(`${url_yt_videos}&playlistId=${req.body.id}`)
+        const urlResponse = await fetch(`${url_yt_videos}&playlistId=${req.params.id}`)
         const response = await urlResponse.json();
 
+        // console.log(`${url_yt_videos}&playlistId=${req.params.id}`)
         const datas = response.items.map(async (item) => {
             const {publishedAt, title, thumbnails, resourceId} = item.snippet
             const dados = {publishedAt, title, thumbnails, resourceId};
@@ -53,7 +61,7 @@ app.get('/api/videos', async (req, res) => {
     
                 return infoVideo
             } catch (error) {
-                console.error(`Erro: ${error}`)
+                console.error(`Erro mapeando: ${error}`)
             }
         })
 
@@ -61,7 +69,7 @@ app.get('/api/videos', async (req, res) => {
         res.send(videosStatistics);
 
     } catch(error) {
-        console.error(`Erro: ${error}`)
+        console.error(`Erro map: ${error}`)
     }
 })
 
