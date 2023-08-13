@@ -28,11 +28,6 @@ app.get('/api/statistics/:id', async (req, res) => {
 
         const dados = {...dadosCanal, ...countCanal}
 
-<<<<<<< HEAD
-        // console.log(dados);
-=======
-        console.log(dados);
->>>>>>> 0fbf7cb2677e5f0c4f2c5692def22446b55cf848
         res.send(dados)
     } catch (error) {
         console.error(`Erro estatisticas: ${error}`)
