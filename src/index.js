@@ -10,12 +10,9 @@ const url_yt_statistics = `https://www.googleapis.com/youtube/v3/channels?part=s
 const url_yt_videos = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=4&key=${api_key}`;
 
 app.use(express.json());
-app.use(
-  cors({
-    // origin: '' // Permitir somente alguma URL
-    // methods: '' // Permitir somente algum(s) metodo(s)
-  })
-);
+app.use(cors({
+  origin: ['http://localhost:3030', 'https://dudu-ytdata.vercel.app']
+}));
 
 app.get("/api/statistics/:id", async (req, res) => {
   try {
