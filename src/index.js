@@ -3,8 +3,7 @@ require("dotenv").config();
 const cors = require("cors");
 
 const app = express();
-const port = 3030;
-// const url = "http://localhost:3030"
+const port = 3000;
 const api_key = process.env.API_KEY;
 const url_yt_statistics = `https://www.googleapis.com/youtube/v3/channels?part=snippet%2C%20statistics&key=${api_key}`;
 const url_yt_videos = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=4&key=${api_key}`;
@@ -79,58 +78,6 @@ app.get("/api/videos/:id", async (req, res) => {
     console.error(`Erro map: ${error}`);
   }
 });
-
-// app.get(`/api/statistics`, (req, res) => {
-//     fetch(`${url_yt_statistics}&id=${req.body.id}`)
-//     .then(response => response.json())
-//     .then(data => {
-//         const {title, customUrl, publishedAt, thumbnails} = data.items[0].snippet
-//         const {viewCount, subscriberCount, videoCount} = data.items[0].statistics
-//         // const { medium } = thumbnails
-//         const dadosCanal = {title, customUrl, publishedAt, thumbnails}
-//         const countCanal = {viewCount, subscriberCount, videoCount}
-//         const dados = {...dadosCanal, ...countCanal}
-
-//         res.send(dados)
-//     })
-//     .catch(error => console.error(error))
-// })
-
-// app.get(`/api/videos`, (req, res) => {
-//     fetch(`${url_yt_videos}&playlistId=${req.body.id}`)
-//     .then(response => response.json())
-//     .then(data => {
-//         const tempData = [];
-//         data.items.forEach((item) => {
-//             const {publishedAt, title, thumbnails, resourceId} = item.snippet
-//             const dados = {publishedAt, title, thumbnails, resourceId};
-//             tempData.push(dados)
-//         })
-//         return tempData;
-//     })
-//     .then(async tempData => {
-
-//         var mapeando = tempData.map(async (data) => {
-
-//             return fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=statistics&key=${api_key}&id=${data.resourceId.videoId}`)
-//             .then(response => response.json())
-//             .then(blabla => {
-//                 const {viewCount, likeCount, commentCount} = blabla.items[0].statistics
-//                 const counts = {viewCount, likeCount, commentCount}
-//                 const lalala = {...data, ...counts}
-
-//                 return lalala;
-//             })
-//             .catch(error => console.error(error))
-
-//         })
-
-//         var lelele = await Promise.all(mapeando);
-//         res.send(lelele);
-
-//     })
-//     .catch(error => console.error(error))
-// })
 
 app.listen(port, () => {
   console.log("O servidor ta aberto na porta " + port + " pai");
